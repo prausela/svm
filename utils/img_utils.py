@@ -2,6 +2,20 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 
+class_colors = {
+    'cow': (255, 0, 0),    # Red
+    'grass': (0, 255, 0),    # Green
+    'sky': (0, 0, 255)     # Blue
+}
+
+def get_img_size(filename: str) -> dict:
+    img = Image.open(filename)
+    width, height = img.size
+    return {
+        'width': width,
+        'height': height
+    }
+
 def img_to_array(filename: str) -> np.ndarray:
     img = Image.open(filename)
     img_array = np.array(img.getdata())

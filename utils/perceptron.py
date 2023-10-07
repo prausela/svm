@@ -1,6 +1,6 @@
-from typing               import Callable
-from error_functions      import mse
-from activation_functions import step_activation
+from typing                     import Callable
+from utils.error_functions      import mse
+from utils.activation_functions import step_activation
 
 import numpy  as np
 import pandas as pd
@@ -33,7 +33,8 @@ def __predict__(x : np.ndarray, w : np.ndarray, activation_func : Callable[[np.n
 def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float, 
                    activation_func_single : Callable[[float], float],
                    iters : int,
-                   calculate_error : Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None) -> Perceptron:
+                   calculate_error : Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None
+                ) -> tuple[Perceptron, list[float]]:
     
     x = train_df.drop([out_col], axis="columns", inplace=False).to_numpy()
     y = train_df[[out_col]].to_numpy()
@@ -56,6 +57,8 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
     w = np.random.random((1, n))
     w_min = None
 
+    error_per_iter = []
+
     while (error is None or error > 0) and i < iters:
         
         x_idx = random.randint(0, p-1)
@@ -69,14 +72,16 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
         
         O = prediction_func(x, w)
         error = calculate_error(x, y, O, p)
+        error_per_iter.append(error)
         if min_error is None or error < min_error:
             min_error = error
             w_min = w
         i += 1
 
-    return Perceptron(w_min, activation_func_single)
+    return (Perceptron(w_min, activation_func_single), error_per_iter)
 
 def build_step_perceptron(train_df : pd.DataFrame, out_col : str, eta : float, 
                    iters : int,
-                   calculate_error : Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None) -> Perceptron:
+                   calculate_error : Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None
+                ) -> tuple[Perceptron, list[float]]:
     return build_perceptron(train_df, out_col, eta, step_activation, iters, calculate_error)

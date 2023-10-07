@@ -53,7 +53,7 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
     error = None
     min_error = p * 2
 
-    w = np.random.rand((1, n))
+    w = np.random.random((1, n))
     w_min = None
 
     while (error is None or error > 0) and i < iters:

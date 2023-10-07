@@ -1,2 +1,12 @@
 env
 utils/__pycache__
+
+.idea
+.DS_Store
+svm
+/output
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class

@@ -43,7 +43,7 @@ def __predict__(x : np.ndarray, w : np.ndarray, activation_func : Callable[[np.n
 def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float, 
                    activation_func_single : Callable[[float], float],
                    iters : int,
-                   calculate_error : Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None
+                   calculate_error : Callable[[np.ndarray, np.ndarray, int], float] = None
                 ) -> tuple[Perceptron, list[float]]:
     
     x = train_df.drop([out_col], axis="columns", inplace=False).to_numpy()
@@ -53,7 +53,7 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
     prediction_func = lambda x, w : __predict__(x, w, activation_func)
 
     if calculate_error is None:
-        calculate_error = lambda _, y, O, p : mse(y, O, p)
+        calculate_error = mse
 
     x = __add_bias__(x)
     
@@ -83,7 +83,7 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
         w = w + deltaW
         
         O = prediction_func(x, w)
-        error = calculate_error(x, y, O, p)
+        error = calculate_error(y, O, p)
         error_per_iter.append(error)
         if min_error is None or error < min_error:
             min_error = error

@@ -1,4 +1,4 @@
-from typing                     import Callable
+from typing                     import Callable, Any
 from utils.error_functions      import mse
 from utils.activation_functions import step_activation
 
@@ -6,15 +6,21 @@ import numpy  as np
 import pandas as pd
 import random
 
+def __column_mat__(x : np.ndarray) -> np.ndarray:
+    return x.reshape((1, -1))
+
 class Perceptron:
     def __init__(self, w : np.ndarray, activation_func_single : Callable[[float], float]) -> None:
         self.w = w
-        self.activation_func_single = activation_func_single
+        self.__activation_func_single__ = activation_func_single
 
-    def predict(self, x : np.ndarray) -> np.ndarray:
-        activation_func = np.vectorize(self.activation_func_single)
+    def predict(self, df : pd.Series) -> Any:
+        x = df.to_numpy()
+        x = __column_mat__(x)
+        activation_func = np.vectorize(self.__activation_func_single__)
         x = __add_bias__(x)
-        return __predict__(x, self.w, activation_func)
+        O = __predict__(x, self.w, activation_func)
+        return O.item()
 
 def __add_bias__(x : np.ndarray) -> np.ndarray:
     p = x.shape[0]

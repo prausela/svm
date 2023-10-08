@@ -80,6 +80,13 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
     min_error = p * 2
 
     w = init_w = init_weights(n)
+    
+    if not isinstance(w, np.ndarray):
+        raise ValueError("Weight initialization failed. Weights should be a numpy array")
+    
+    if w.shape != (1, n):
+        raise ValueError("Weight initialization failed. Should be shape (1, {})".format(n))
+    
     w_min = None
 
     error_per_iter = []

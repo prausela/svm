@@ -8,7 +8,7 @@ def __init_random_between_vals__(n : int, lower_limit : float, upper_limit : flo
         random_state = np.random.default_rng()
 
     if lower_limit > upper_limit:
-        raise 'Lower limit cannot be greater than upper limit'
+        raise ValueError('Lower limit cannot be greater than upper limit')
     
     limits_range = upper_limit - lower_limit
     return random_state.random(size=(1, n)) * limits_range + lower_limit

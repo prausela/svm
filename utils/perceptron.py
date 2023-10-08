@@ -81,7 +81,7 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
 
     while (error is None or error > 0) and i < iters:
         
-        i_idx = random_state.integers(0, p-1)
+        i_idx = random_state.integers(0, p)
         i_idx_next = i_idx + 1
         
         x_i = x[i_idx:i_idx_next]

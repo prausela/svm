@@ -1,6 +1,6 @@
 from typing                     import Callable, Any
 from utils.error_functions      import mse
-from utils.activation_functions import step_activation
+from utils.activation_functions import step_activation, activation_function_types
 
 import numpy  as np
 import pandas as pd
@@ -13,6 +13,10 @@ class Perceptron:
     def __init__(self, w : np.ndarray, activation_func_single : Callable[[float], float]) -> None:
         self.w = w
         self.__activation_func_single__ = activation_func_single
+        if activation_func_single in activation_function_types:
+            self.type = activation_function_types[activation_func_single]
+        else:
+            self.type = "custom"
 
     def predict(self, df : pd.Series) -> Any:
         x = df.to_numpy()

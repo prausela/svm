@@ -115,7 +115,7 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
     return (Perceptron(w_min, activation_func_single), error_per_iter, init_w)
 
 def build_step_perceptron(train_df : pd.DataFrame, out_col : str, eta : float, 
-                   iters : int,
+                   iters : int = None,
                    calculate_error : Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None,
                    init_weights : Callable[[int], np.ndarray] = None,
                    random_state : np.random.Generator = None

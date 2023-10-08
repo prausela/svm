@@ -5,6 +5,7 @@ from utils.activation_functions import step_activation, activation_function_type
 import numpy  as np
 import pandas as pd
 import random
+import warnings
 
 def __column_mat__(x : np.ndarray) -> np.ndarray:
     return x.reshape((1, -1))
@@ -40,11 +41,17 @@ def __predict__(x : np.ndarray, w : np.ndarray, activation_func : Callable[[np.n
     O = activation_func(h)
     return O
 
+def __is_lambda__(f : Callable) -> bool:
+    return f.__code__.co_name == "<lambda>"
+
 def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float, 
                    activation_func_single : Callable[[float], float],
                    iters : int,
                    calculate_error : Callable[[np.ndarray, np.ndarray, int], float] = None
                 ) -> tuple[Perceptron, list[float]]:
+    
+    if __is_lambda__(activation_func_single):
+        warnings.warn("Avoid using lambdas as activation functions as they are locally-bound")
     
     x = train_df.drop([out_col], axis="columns", inplace=False).to_numpy()
     y = train_df[[out_col]].to_numpy()

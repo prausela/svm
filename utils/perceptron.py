@@ -13,7 +13,8 @@ def __column_mat__(x: np.ndarray) -> np.ndarray:
 
 
 class Perceptron:
-    def __init__(self, w : np.ndarray, activation_func_single : Callable[[float], float], perceptron_type : str = None) -> None:
+    def __init__(self, w: np.ndarray, activation_func_single: Callable[[float], float], 
+                 perceptron_type: str = None) -> None:
         self.w = w
         self.__activation_func_single__ = activation_func_single
         if perceptron_type is not None:
@@ -51,13 +52,13 @@ def __predict__(x: np.ndarray, w: np.ndarray, activation_func: Callable[[np.ndar
 def __is_lambda__(f: Callable) -> bool:
     return f.__code__.co_name == "<lambda>"
 
-def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float, 
-                   activation_func_single : Callable[[float], float],
-                   iters : int = None,
-                   calculate_error : Callable[[np.ndarray, np.ndarray, int], float] = None,
-                   init_weights : Callable[[int], np.ndarray] = None,
-                   random_state : np.random.Generator = None,
-                   perceptron_type : str = None
+def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float, 
+                   activation_func_single: Callable[[float], float],
+                   iters: int = None,
+                   calculate_error: Callable[[np.ndarray, np.ndarray, int], float] = None,
+                   init_weights: Callable[[int], np.ndarray] = None,
+                   random_state: np.random.Generator = None,
+                   perceptron_type: str = None
                 ) -> tuple[Perceptron, list[float]]:
     
     if __is_lambda__(activation_func_single):

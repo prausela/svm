@@ -11,10 +11,12 @@ def __column_mat__(x : np.ndarray) -> np.ndarray:
     return x.reshape((1, -1))
 
 class Perceptron:
-    def __init__(self, w : np.ndarray, activation_func_single : Callable[[float], float]) -> None:
+    def __init__(self, w : np.ndarray, activation_func_single : Callable[[float], float], perceptron_type : str = None) -> None:
         self.w = w
         self.__activation_func_single__ = activation_func_single
-        if activation_func_single in activation_function_types:
+        if perceptron_type is not None:
+            self.type = perceptron_type
+        elif activation_func_single in activation_function_types:
             self.type = activation_function_types[activation_func_single]
         else:
             self.type = "custom"
@@ -49,7 +51,8 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
                    iters : int = None,
                    calculate_error : Callable[[np.ndarray, np.ndarray, int], float] = None,
                    init_weights : Callable[[int], np.ndarray] = None,
-                   random_state : np.random.Generator = None
+                   random_state : np.random.Generator = None,
+                   perceptron_type : str = None
                 ) -> tuple[Perceptron, list[float]]:
     
     if __is_lambda__(activation_func_single):
@@ -112,7 +115,7 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
             w_min = w
         i += 1
 
-    return (Perceptron(w_min, activation_func_single), error_per_iter, init_w)
+    return (Perceptron(w_min, activation_func_single, perceptron_type), error_per_iter, init_w)
 
 def build_step_perceptron(train_df : pd.DataFrame, out_col : str, eta : float, 
                    iters : int = None,

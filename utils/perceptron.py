@@ -4,7 +4,6 @@ from utils.activation_functions import step_activation, activation_function_type
 
 import numpy  as np
 import pandas as pd
-import random
 import warnings
 
 def __column_mat__(x : np.ndarray) -> np.ndarray:
@@ -47,11 +46,15 @@ def __is_lambda__(f : Callable) -> bool:
 def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float, 
                    activation_func_single : Callable[[float], float],
                    iters : int,
-                   calculate_error : Callable[[np.ndarray, np.ndarray, int], float] = None
+                   calculate_error : Callable[[np.ndarray, np.ndarray, int], float] = None,
+                   random_state : np.random.Generator = None
                 ) -> tuple[Perceptron, list[float]]:
     
     if __is_lambda__(activation_func_single):
         warnings.warn("Avoid using lambdas as activation functions as they are locally-bound")
+
+    if random_state is None:
+        random_state = np.random.default_rng()
     
     x = train_df.drop([out_col], axis="columns", inplace=False).to_numpy()
     y = train_df[[out_col]].to_numpy()
@@ -71,14 +74,14 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
     error = None
     min_error = p * 2
 
-    w = np.random.random((1, n)) * 2 - 1
+    w = random_state.random((1, n)) * 2 - 1
     w_min = None
 
     error_per_iter = []
 
     while (error is None or error > 0) and i < iters:
         
-        i_idx = random.randint(0, p-1)
+        i_idx = random_state.integers(0, p-1)
         i_idx_next = i_idx + 1
         
         x_i = x[i_idx:i_idx_next]
@@ -101,6 +104,7 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
 
 def build_step_perceptron(train_df : pd.DataFrame, out_col : str, eta : float, 
                    iters : int,
-                   calculate_error : Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None
+                   calculate_error : Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None,
+                   random_state : np.random.Generator = None
                 ) -> tuple[Perceptron, list[float]]:
-    return build_perceptron(train_df, out_col, eta, step_activation, iters, calculate_error)
+    return build_perceptron(train_df, out_col, eta, step_activation, iters, calculate_error, random_state)

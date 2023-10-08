@@ -45,7 +45,7 @@ def __is_lambda__(f : Callable) -> bool:
 
 def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float, 
                    activation_func_single : Callable[[float], float],
-                   iters : int,
+                   iters : int = None,
                    calculate_error : Callable[[np.ndarray, np.ndarray, int], float] = None,
                    random_state : np.random.Generator = None
                 ) -> tuple[Perceptron, list[float]]:
@@ -79,7 +79,7 @@ def build_perceptron(train_df : pd.DataFrame, out_col : str, eta : float,
 
     error_per_iter = []
 
-    while (error is None or error > 0) and i < iters:
+    while (error is None or error > 0) and (iters is None or i < iters):
         
         i_idx = random_state.integers(0, p)
         i_idx_next = i_idx + 1

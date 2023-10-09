@@ -31,6 +31,35 @@ class Perceptron:
         x = __add_bias__(x)
         O = __predict__(x, self.w, activation_func)
         return O.item()
+    
+
+def sample2points(df: pd.DataFrame, out_col: str, perceptron: Perceptron = None, 
+                  only_correct: bool = None) -> tuple[np.ndarray, np.ndarray]:
+    
+    x_df = df.drop([out_col], axis="columns", inplace=False)
+    y_df = df[[out_col]]
+
+    if (only_correct is None and perceptron is None) or (only_correct is not None and not only_correct):
+
+        x = x_df.to_numpy()
+        y = y_df.to_numpy()
+
+        return (x, y)
+    
+    if perceptron is None:
+        raise ValueError("Must provide Perceptron when only_correct is True")
+    
+    O_df = x_df.apply(perceptron.predict, axis=1)
+
+    only_correct_selection = y_df[out_col] == O_df
+
+    x_df = x_df[only_correct_selection]
+    y_df = y_df[only_correct_selection]
+
+    x = x_df.to_numpy()
+    y = y_df.to_numpy()
+
+    return (x, y)
 
 
 def __add_bias__(x: np.ndarray) -> np.ndarray:
@@ -67,8 +96,7 @@ def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float,
     if random_state is None:
         random_state = np.random.default_rng()
 
-    x = train_df.drop([out_col], axis="columns", inplace=False).to_numpy()
-    y = train_df[[out_col]].to_numpy()
+    x, y = sample2points(train_df, out_col)
 
     activation_func = np.vectorize(activation_func_single)
     prediction_func = lambda x, w: __predict__(x, w, activation_func)

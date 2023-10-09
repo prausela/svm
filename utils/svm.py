@@ -3,7 +3,7 @@ import numpy as np
 from utils.svm_utils import calculate_cost, compute_gradient, l
 
 class SVM:
-    def __init__(self, c: float = 1.0, batch_size: int = 64, iterations: int = 1000, initial_learning_rate: float = 0.01, decay_rate: float = 0.9):
+    def __init__(self, c: float = 1.0, batch_size: int = 1, iterations: int = 1000, initial_learning_rate: float = 0.01, decay_rate: float = 0.0001):
         self.c = c
         self.iterations = iterations
         self.batch_size = batch_size

@@ -1,16 +1,19 @@
 import numpy as np
 import math
 
-def single_row_array_shape(a: np.ndarray, expected_size: int, 
+def single_row_array_shape(a: np.ndarray, expected_size: int = None, 
                                 err_msg: str = None) -> np.ndarray:
     return single_axis_array_shape(a, 0, expected_size, err_msg)
 
-def single_column_array_shape(a: np.ndarray, expected_size: int, 
+def single_column_array_shape(a: np.ndarray, expected_size: int = None, 
                                 err_msg: str = None) -> np.ndarray:
     return single_axis_array_shape(a, 1, expected_size, err_msg)
 
-def single_axis_array_shape(a: np.ndarray, axis: int, expected_size: int, 
+def single_axis_array_shape(a: np.ndarray, axis: int, expected_size: int = None, 
                                 err_msg: str = None) -> np.ndarray:
+    if expected_size is None:
+        expected_size = a.size
+
     if err_msg is None:
         err_msg = "Expected numpy array of size {}".format(expected_size)
 

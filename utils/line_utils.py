@@ -1,4 +1,4 @@
-from utils.perceptron import Perceptron, __add_bias__
+from utils.perceptron import Perceptron, __add_bias__, sample2points
 from utils.matrix_utils import single_column_array_shape, single_row_array_shape, mat_norm_2
 
 import pandas as pd
@@ -25,10 +25,6 @@ class Line:
 
 def step_perceptron_line(perceptron: Perceptron) -> Line:
     return Line(perceptron.w)
-
-def sample2points(df: pd.DataFrame, out_col: str, perceptron: Perceptron = None, 
-                  only_correct: bool = False) -> tuple[np.ndarray, np.ndarray]:
-    pass
 
 def point_idxs_by_dist2line(points: np.ndarray, line: Line, point_count: int = None,
                             positive_points: int = None, negative_points: int = None) -> np.ndarray:

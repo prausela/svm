@@ -24,7 +24,7 @@ class Line:
         return np.copy(self.coeffs)
 
 def step_perceptron_line(perceptron: Perceptron) -> Line:
-    pass
+    return Line(perceptron.w)
 
 def sample2points(df: pd.DataFrame, out_col: str, perceptron: Perceptron = None, 
                   only_correct: bool = False) -> tuple[np.ndarray, np.ndarray]:

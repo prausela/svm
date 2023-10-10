@@ -92,9 +92,6 @@ def __least_dist2line_points_idxs_by_class_for_each__(points: np.ndarray, line: 
 
 def __least_dist2line_points_idxs_by_class_for_all__(points: np.ndarray, line: Line, point_count: int = None,
                                                      ) -> tuple[np.ndarray, np.ndarray]:
-    if point_count < 0:
-        raise ValueError("Must specify a number of points greater than 0. \
-                         Specified {}".format(point_count))
 
     n_rows = points.shape[0]
     if n_rows < point_count:
@@ -138,9 +135,9 @@ def least_dist2line_points_idxs_by_class(points: np.ndarray, line: Line, point_c
         raise ValueError("Must provide either point_count or positive_points and negative_points. \
                          Not both")
     
-    if not point_count_is_none and point_count < 0:
-        raise ValueError("Must specify a number of points greater than 0. \
-                         Specified {}".format(point_count))
+    if not point_count_is_none and point_count < 3:
+        raise ValueError("Must specify a number of points greater than {}. \
+                         Specified {}".format(3, point_count))
     
     if positive_and_negative_points_are_none:
         return __least_dist2line_points_idxs_by_class_for_all__(points, line, point_count)
@@ -150,13 +147,12 @@ def least_dist2line_points_idxs_by_class(points: np.ndarray, line: Line, point_c
     elif positive_points is not None and negative_points is None:
         negative_points = point_count - positive_points 
 
-    if positive_points < 0:
-        raise ValueError("Must specify a number of positive points greater than 0. \
-                         Specified {}".format(positive_points))
-    
-    if negative_points < 0:
-        raise ValueError("Must specify a number of negative points greater than 0. \
-                         Specified {}".format(negative_points))
+    point_count = positive_points + negative_points
+    if point_count < 3:
+        raise ValueError("Must specify a number of points greater than {}. \
+                         Specified {}: {} positive {} negative".format(3, point_count, 
+                                                                       positive_points, 
+                                                                       negative_points))
     
     return __least_dist2line_points_idxs_by_class_for_each__(points, line, positive_points, negative_points)
 

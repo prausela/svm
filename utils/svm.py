@@ -31,7 +31,7 @@ class SVM:
         ids = np.arange(sample_count)
         np.random.shuffle(ids)
 
-        costs = []
+        self.costs = []
 
         for epoch in range(self.epochs):
 
@@ -54,7 +54,7 @@ class SVM:
 
             # check the cost function
             curr_cost = self.get_cost(x, y)
-            costs.append(curr_cost)
+            self.costs.append(curr_cost)
 
             # store the best result
             if curr_cost < self.best_cost:

@@ -195,6 +195,32 @@ def __margin2line_from_points__(line: Line, classA_points: np.ndarray, classB_po
     margin = classA_margin + classB_margin
     return margin
 
+def max_margin_line_from_points(dir_points: np.ndarray, trasl_points: np.ndarray) -> tuple[float, Line]:
+    dir_points_count = dir_points.shape[0]
+    trasl_points_count = trasl_points.shape[0]
+    max_margin = None
+    max_margin_line = None
+    for dir_i in range(dir_points_count):
+        for dir_j in range(dir_i+1, dir_points_count):
+            for trasl_idx in range(trasl_points_count):
+                line = support_vectors_line(dir_points[dir_i], dir_points[dir_j], trasl_points[trasl_idx])
+
+                margin = __margin2line_from_points__(line, dir_points, trasl_points)
+                if max_margin is None or margin > max_margin:
+                    max_margin = margin
+                    max_margin_line = line
+
+    return max_margin, max_margin_line
+
+def __max_margin_line_by_class_points__(positive_points: np.ndarray, negative_points: np.ndarray) -> tuple[float, Line]:
+    dir_by_pos_margin, dir_by_pos_line = max_margin_line_from_points(positive_points, negative_points)
+    dir_by_neg_margin, dir_by_neg_line = max_margin_line_from_points(negative_points, positive_points)
+
+    if dir_by_neg_margin is None or (dir_by_pos_margin is not None and dir_by_pos_margin >= dir_by_neg_margin):
+        return dir_by_pos_margin, dir_by_pos_line
+
+    return dir_by_neg_margin, dir_by_neg_line
+
 def maximize_step_perceptron_line_margin(df: pd.DataFrame, out_col: str, perceptron: Perceptron, 
                                          points2decide : int = None, positive_points2decide: int = None, 
                                          negative_points2decide: int = None, only_correct : bool = True

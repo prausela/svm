@@ -164,8 +164,14 @@ def support_vectors_line(dirPointA: np.ndarray, dirPointB: np.ndarray, traslPoin
     pass
 
 def maximize_step_perceptron_line_margin(df: pd.DataFrame, out_col: str, perceptron: Perceptron, 
-                                         points2decide : int = None, positive_points: int = None, 
-                                         negative_points: int = None, only_correct : bool = True
+                                         points2decide : int = None, positive_points2decide: int = None, 
+                                         negative_points2decide: int = None, only_correct : bool = True
                                          ) -> Perceptron:
-    pass
+    points, _ = sample2points(df, out_col, perceptron, only_correct)
+    line = step_perceptron_line(perceptron)
+    pos_idxs, neg_idxs = least_dist2line_points_idxs_by_class(points, 
+                                                              line, points2decide, 
+                                                              positive_points2decide, 
+                                                              negative_points2decide)
+    return None
 

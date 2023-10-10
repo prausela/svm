@@ -1,4 +1,5 @@
 from heapq import heappush, heappushpop
+from utils.activation_functions import step_activation
 from utils.perceptron import Perceptron, __add_bias__, sample2points
 from utils.matrix_utils import single_column_array_shape, single_row_array_shape, mat_norm_2
 
@@ -224,12 +225,14 @@ def __max_margin_line_by_class_points__(positive_points: np.ndarray, negative_po
 def maximize_step_perceptron_line_margin(df: pd.DataFrame, out_col: str, perceptron: Perceptron, 
                                          points2decide : int = None, positive_points2decide: int = None, 
                                          negative_points2decide: int = None, only_correct : bool = True
-                                         ) -> Perceptron:
+                                         ) -> tuple[Perceptron, float]:
     points, _ = sample2points(df, out_col, perceptron, only_correct)
     line = step_perceptron_line(perceptron)
     pos_idxs, neg_idxs = least_dist2line_points_idxs_by_class(points, 
                                                               line, points2decide, 
                                                               positive_points2decide, 
                                                               negative_points2decide)
-    return None
+    margin, line = __max_margin_line_by_class_points__(points[pos_idxs], points[neg_idxs])
+    max_margin_perceptron = Perceptron(line.coefficients(), step_activation)
+    return max_margin_perceptron, margin
 

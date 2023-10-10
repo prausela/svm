@@ -105,10 +105,13 @@ def __least_dist2line_points_idxs_by_class_for_all__(points: np.ndarray, line: L
     
     selected_dists = distances[dist_idxs]
 
-    some_positive = np.any(selected_dists >= 0)
-    some_negative = np.any(selected_dists < 0)
+    selected_dists_pos_cond = selected_dists >= 0
+    selected_dists_neg_cond = selected_dists < 0
+
+    some_positive = np.any(selected_dists_pos_cond)
+    some_negative = np.any(selected_dists_neg_cond)
     if some_positive and some_negative:
-        return dist_idxs
+        return dist_idxs[selected_dists_pos_cond], dist_idxs[selected_dists_neg_cond]
     
     if not some_positive:
         other_class_dist_idxs = __least_dist_points_idxs_by_class_for_class__(distances, distances >= 0, 1, "positive")
@@ -117,7 +120,7 @@ def __least_dist2line_points_idxs_by_class_for_all__(points: np.ndarray, line: L
 
     dist_idxs[0] = other_class_dist_idxs[0]
 
-    return dist_idxs
+    return dist_idxs[selected_dists_pos_cond], dist_idxs[selected_dists_neg_cond]
 
 
 def least_dist2line_points_idxs_by_class(points: np.ndarray, line: Line, point_count: int = None,

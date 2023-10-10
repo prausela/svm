@@ -58,11 +58,11 @@ def __least_dist_points_idxs_by_class_for_class__(distances: np.ndarray, class_c
         raise ValueError("Must provide number less or equal to {} for {} points. "
                          "{} were provided".format(class_count, class_name, class_pick_count))
     
-    class_distances = distances[class_tuple[0]]
+    class_distances = distances[class_idxs]
     class_distances = abs(class_distances)
 
     class_dist_idxs = least_dist_idxs(class_distances, class_pick_count)
-    return class_dist_idxs
+    return class_idxs[class_dist_idxs]
 
 
 def __least_dist2line_points_idxs_by_class_for_each__(points: np.ndarray, line: Line,

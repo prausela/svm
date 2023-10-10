@@ -165,11 +165,24 @@ def points_distances_to_line(line: Line, points: np.ndarray) -> np.ndarray:
     abs_dists = abs(distances)
     return abs_dists
 
-def max_margin_line_from_points(positive_points: np.ndarray, negative_points: np.ndarray) -> Line:
-    pass
+X_POS = 0
+Y_POS = 1
 
 def support_vectors_line(dirPointA: np.ndarray, dirPointB: np.ndarray, traslPoint: np.ndarray) -> Line:
-    pass
+    x1, x2, x_t = dirPointA[X_POS], dirPointB[X_POS], traslPoint[X_POS]
+    y1, y2, y_t = dirPointA[Y_POS], dirPointB[Y_POS], traslPoint[Y_POS]
+
+    m = (x2 - x1) / (y2 - y1)
+
+    b_dir   = y2 - m * x2
+    b_trasl = y_t - m * x_t
+    b = (b_dir + b_trasl) / 2
+
+    w = np.array([[m, -1, b]])
+
+    line = Line(w)
+    return line
+
 
 def maximize_step_perceptron_line_margin(df: pd.DataFrame, out_col: str, perceptron: Perceptron, 
                                          points2decide : int = None, positive_points2decide: int = None, 

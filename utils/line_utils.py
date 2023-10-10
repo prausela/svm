@@ -22,7 +22,8 @@ class Line:
         return single_val_mat.item()
 
     def coefficients(self) -> np.ndarray:
-        return np.copy(self.coeffs)
+        coeffs = single_row_array_shape(self.coeffs)
+        return np.copy(coeffs)
 
 def step_perceptron_line(perceptron: Perceptron) -> Line:
     return Line(perceptron.w)

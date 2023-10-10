@@ -160,6 +160,10 @@ def least_dist2line_points_idxs_by_class(points: np.ndarray, line: Line, point_c
     
     return __least_dist2line_points_idxs_by_class_for_each__(points, line, positive_points, negative_points)
 
+def points_distances_to_line(line: Line, points: np.ndarray) -> np.ndarray:
+    distances = np.apply_along_axis(line.distance_to, 1, points)
+    abs_dists = abs(distances)
+    return abs_dists
 
 def max_margin_line_from_points(positive_points: np.ndarray, negative_points: np.ndarray) -> Line:
     pass

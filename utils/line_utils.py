@@ -189,10 +189,10 @@ def __calculate_class_margin__(line: Line, class_points: np.ndarray) -> float:
     class_margin = class_dists[class_least_dist_idx]
     return class_margin
 
-def __margin2line_from_points__(line: Line, dir_points: np.ndarray, trasl_points: np.ndarray) -> float:
-    dir_margin = __calculate_class_margin__(line, dir_points)
-    trasl_margin = __calculate_class_margin__(line, trasl_points)
-    margin = dir_margin + trasl_margin
+def __margin2line_from_points__(line: Line, classA_points: np.ndarray, classB_points: np.ndarray) -> float:
+    classA_margin = __calculate_class_margin__(line, classA_points)
+    classB_margin = __calculate_class_margin__(line, classB_points)
+    margin = classA_margin + classB_margin
     return margin
 
 def maximize_step_perceptron_line_margin(df: pd.DataFrame, out_col: str, perceptron: Perceptron, 

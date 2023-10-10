@@ -183,6 +183,17 @@ def support_vectors_line(dirPointA: np.ndarray, dirPointB: np.ndarray, traslPoin
     line = Line(w)
     return line
 
+def __calculate_class_margin__(line: Line, class_points: np.ndarray) -> float:
+    class_dists = points_distances_to_line(line, class_points)
+    class_least_dist_idx = least_dist_idxs(class_dists, 1).item()
+    class_margin = class_dists[class_least_dist_idx]
+    return class_margin
+
+def __margin2line_from_points__(line: Line, dir_points: np.ndarray, trasl_points: np.ndarray) -> float:
+    dir_margin = __calculate_class_margin__(line, dir_points)
+    trasl_margin = __calculate_class_margin__(line, trasl_points)
+    margin = dir_margin + trasl_margin
+    return margin
 
 def maximize_step_perceptron_line_margin(df: pd.DataFrame, out_col: str, perceptron: Perceptron, 
                                          points2decide : int = None, positive_points2decide: int = None, 

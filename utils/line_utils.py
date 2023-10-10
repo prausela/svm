@@ -54,9 +54,9 @@ def __least_dist_points_idxs_by_class_for_class__(distances: np.ndarray, class_c
     class_idxs = class_tuple[0]
     class_count = len(class_idxs)
 
-    if class_count < class_pick_count:
-        raise ValueError("Must provide number less or equal to {} for {} points. \
-                         {} were provided".format(class_count, class_name, class_pick_count))
+    if class_pick_count > class_count:
+        raise ValueError("Must provide number less or equal to {} for {} points. "
+                         "{} were provided".format(class_count, class_name, class_pick_count))
     
     class_distances = distances[class_tuple[0]]
     class_distances = abs(class_distances)
@@ -72,10 +72,10 @@ def __least_dist2line_points_idxs_by_class_for_each__(points: np.ndarray, line: 
     point_count = positive_points + negative_points
 
     n_rows = points.shape[0]
-    if n_rows < point_count:
-        raise ValueError("Must provide number of points less or equal to {}. \
-                         {} were provided: {} positive and {} negative".format(n_rows, point_count, 
-                                                                               positive_points, negative_points))
+    if point_count > n_rows:
+        raise ValueError("Must provide number of points less or equal to {}. "
+                         "{} were provided: {} positive and {} negative".format(n_rows, point_count, 
+                                                                                positive_points, negative_points))
     
     distances = np.apply_along_axis(line.distance_to, 1, points)
 
@@ -94,9 +94,9 @@ def __least_dist2line_points_idxs_by_class_for_all__(points: np.ndarray, line: L
                                                      ) -> tuple[np.ndarray, np.ndarray]:
 
     n_rows = points.shape[0]
-    if n_rows < point_count:
-        raise ValueError("Must provide number of points less or equal to {}. \
-                         {} were provided".format(n_rows, point_count))
+    if point_count > n_rows:
+        raise ValueError("Must provide number of points less or equal to {}. "
+                         "{} were provided".format(n_rows, point_count))
     
     distances = np.apply_along_axis(line.distance_to, 1, points)
     abs_dists = abs(distances)
@@ -128,16 +128,16 @@ def least_dist2line_points_idxs_by_class(points: np.ndarray, line: Line, point_c
     positive_and_negative_points_are_none = positive_points is None and negative_points is None
     
     if point_count_is_none and positive_and_negative_points_are_none:
-        raise ValueError("Must provide either point_count or positive_points and negative_points. \
-                         Currently, all are None")
+        raise ValueError("Must provide either point_count or positive_points and negative_points. "
+                         "Currently, all are None")
     
     if not point_count_is_none and not positive_and_negative_points_are_none:
-        raise ValueError("Must provide either point_count or positive_points and negative_points. \
-                         Not both")
+        raise ValueError("Must provide either point_count or positive_points and negative_points. "
+                         "Not both")
     
     if not point_count_is_none and point_count < 3:
-        raise ValueError("Must specify a number of points greater than {}. \
-                         Specified {}".format(3, point_count))
+        raise ValueError("Must specify a number of points greater or equal to {}. "
+                         "Specified {}".format(3, point_count))
     
     if positive_and_negative_points_are_none:
         return __least_dist2line_points_idxs_by_class_for_all__(points, line, point_count)
@@ -149,8 +149,8 @@ def least_dist2line_points_idxs_by_class(points: np.ndarray, line: Line, point_c
 
     point_count = positive_points + negative_points
     if point_count < 3:
-        raise ValueError("Must specify a number of points greater than {}. \
-                         Specified {}: {} positive {} negative".format(3, point_count, 
+        raise ValueError("Must specify a number of points greater or equal to {}. "
+                         "Specified {}: {} positive {} negative".format(3, point_count, 
                                                                        positive_points, 
                                                                        negative_points))
     

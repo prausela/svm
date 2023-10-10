@@ -49,7 +49,7 @@ def least_dist_idxs(distances: np.ndarray, point_count: int) -> np.ndarray:
     return dist_idxs
 
 def __least_dist_points_idxs_by_class_for_class__(distances: np.ndarray, class_condition: np.ndarray, 
-                                                 class_pick_count: int, class_name: str) -> np.ndarray:
+                                                  class_pick_count: int, class_name: str) -> np.ndarray:
     class_tuple = np.where(class_condition)
     class_idxs = class_tuple[0]
     class_count = len(class_idxs)

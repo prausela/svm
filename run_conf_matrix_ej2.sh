@@ -1,7 +1,7 @@
 #!/bin/bash
 
 kernels=("linear" "sigmoid" "rbf" "poly")
-c_values=("0.5" "1" "2.5" "5" "10" "25" "50")
+c_values=("0.5" "1" "2.5" "5" "10")
 
 for kernel in "${kernels[@]}"; do
     for c_value in "${c_values[@]}"; do

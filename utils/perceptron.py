@@ -83,6 +83,7 @@ def __is_lambda__(f: Callable) -> bool:
 
 def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float, 
                    activation_func_single: Callable[[float], float],
+                   x: np.ndarray = None, y: np.ndarray = None,
                    iters: int = None,
                    calculate_error: Callable[[np.ndarray, np.ndarray, int], float] = None,
                    init_weights: Callable[[int], np.ndarray] = None,
@@ -90,13 +91,18 @@ def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float,
                    perceptron_type: str = None
                 ) -> tuple[Perceptron, list[float]]:
     
+    if not (((train_df is None and out_col is None) and (x is not None and y is not None)) or \
+            ((train_df is not None and out_col is not None) and (x is None and y is None))):
+        raise ValueError("Must specify either train_df and out_col or x and y")
+    
     if __is_lambda__(activation_func_single):
         warnings.warn("Avoid using lambdas as activation functions as they are locally-bound")
 
     if random_state is None:
         random_state = np.random.default_rng()
 
-    x, y = sample2points(train_df, out_col)
+    if train_df is not None:
+        x, y = sample2points(train_df, out_col)
 
     activation_func = np.vectorize(activation_func_single)
     prediction_func = lambda x, w: __predict__(x, w, activation_func)
@@ -153,9 +159,11 @@ def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float,
 
 
 def build_step_perceptron(train_df: pd.DataFrame, out_col: str, eta: float,
+                          x: np.ndarray = None, y: np.ndarray = None,
                           iters: int = None,
                           calculate_error: Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None,
                           init_weights: Callable[[int], np.ndarray] = None,
                           random_state: np.random.Generator = None
                           ) -> tuple[Perceptron, list[float]]:
-    return build_perceptron(train_df, out_col, eta, step_activation, iters, calculate_error, init_weights, random_state)
+    return build_perceptron(train_df, out_col, eta, step_activation, x, y, 
+                            iters, calculate_error, init_weights, random_state)

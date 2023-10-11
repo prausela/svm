@@ -22,13 +22,14 @@ def run_ej2():
     # Ej 2.C Part 1
     x = train_df[["R", "G", "B"]].to_numpy()
     y = train_df["Class"].to_numpy()
-    svm = get_svm_by_c_kernel(x, y, c=1, kernel="rbf")
+    svm = get_svm_by_c_kernel(x, y, c=5, kernel="rbf")
 
     # Ej 2.F, 2.E predict + plot
     predict_and_plot("data/cow.jpg", "classified_cow.png", svm)
 
     # Ej 2.G
     predict_and_plot("data/milka-cow.jpg", "classified_milka_cow.png", svm)
+    predict_and_plot("data/sirio.jpg", "classified_sirio.png", svm)
 
 
 if __name__ == '__main__':

@@ -24,8 +24,12 @@ class Perceptron:
         else:
             self.type = "custom"
 
-    def predict(self, df: pd.Series) -> Any:
-        x = df.to_numpy()
+    def predict(self, df: pd.Series = None, x: np.ndarray = None) -> Any:
+        if (df is None and x is None) or (df is not None and x is not None):
+            raise ValueError("Must provide either a Pandas Series or a numpy array")
+        
+        if x is None:
+            x = df.to_numpy()
         x = __column_mat__(x)
         activation_func = np.vectorize(self.__activation_func_single__)
         x = __add_bias__(x)

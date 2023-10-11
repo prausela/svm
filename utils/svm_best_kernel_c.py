@@ -48,18 +48,17 @@ def get_svm_confusion_matrix(c_value: float, kernel: str, input_dir: str, iters:
 
     plt.figure(figsize=(8, 6))
     plt.imshow(cm, interpolation='nearest', cmap=sns.cubehelix_palette(as_cmap=True, rot=.2, gamma=.5))
-    plt.title(f"Normalized Confusion Matrix for {kernel} kernel, c = {c_value:.1f}")
+    plt.title(f"Confusion Matrix for {kernel} kernel, c = {c_value:.1f}")
     plt.colorbar()
 
     tick_marks = np.arange(len(class_labels))
     plt.xticks(tick_marks, class_labels, rotation=45)
     plt.yticks(tick_marks, class_labels)
 
-    fmt = '.2f'
     thresh = cm.max() / 2.
     for i in range(len(class_labels)):
         for j in range(len(class_labels)):
-            plt.text(j, i, format(cm[i, j], fmt),
+            plt.text(j, i, "{:.2f}%".format(cm[i, j] * 100),
                      horizontalalignment="center",
                      color="white" if cm[i, j] > thresh else "black")
 

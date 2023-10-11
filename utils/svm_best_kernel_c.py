@@ -14,12 +14,12 @@ def get_svm_confusion_matrix(cow_df: pd.DataFrame, grass_df: pd.DataFrame, sky_d
     output_dir = 'output/graphs/'
     os.makedirs(output_dir, exist_ok=True)
 
-    iters = 5
+    iters = 3
     kernels = ['linear', 'sigmoid', 'rbf', 'poly']
     # Define the range of C values:
     # - From 0.5 to 5 in steps of 0.5
     # - From 6 to 20 in steps of 1
-    c_values = np.concatenate((np.arange(0.5, 5.5, 0.5), np.arange(6, 21, 1)))
+    c_values = np.concatenate((np.arange(0.5, 2.5, 0.5), np.arange(3, 21, 1)))
 
     df = pd.concat([cow_df, grass_df, sky_df], ignore_index=True)
     dataframes_list = []
@@ -80,5 +80,5 @@ def get_svm_confusion_matrix(cow_df: pd.DataFrame, grass_df: pd.DataFrame, sky_d
             error_accuracy = 1 - accuracy
 
             print(f"{kernel} kernel, c = {c:.1f}")
-            print(f"Precision: {precision:.2f}, Error (Precision): {error_precision:.4f}")
-            print(f"Accuracy: {accuracy:.2f}, Error (Accuracy): {error_accuracy:.4f}")
+            print(f"Precision: {precision:.5f}, Error (Precision): {error_precision:.5f}")
+            print(f"Accuracy: {accuracy:.5f}, Error (Accuracy): {error_accuracy:.5f}")

@@ -17,7 +17,7 @@ def generate_ls_data(num_points, separator, x_range=(0, 5), y_range=(0, 5), file
         data.append((x, y, label))
 
     df = pd.DataFrame(data, columns=["X", "Y", "Label"])
-    df.to_csv(filename)
+    df.to_csv(filename, index=False)
     
     return data
 
@@ -48,6 +48,6 @@ def generate_ls_data_mc(num_points, num_misclassified, separator, x_range=(0, 5)
         data.append((x, y, label))
 
     df = pd.DataFrame(data, columns=["X", "Y", "Label"])
-    df.to_csv(filename)
+    df.to_csv(filename, index=False)
 
     return data

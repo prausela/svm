@@ -85,7 +85,7 @@ def __predict__(x: np.ndarray, w: np.ndarray, activation_func: Callable[[np.ndar
 def __is_lambda__(f: Callable) -> bool:
     return f.__code__.co_name == "<lambda>"
 
-def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float, 
+def build_perceptron(train_df: pd.DataFrame, test_df : pd.DataFrame, out_col : str, eta : float, 
                    activation_func_single: Callable[[float], float],
                    x: np.ndarray = None, y: np.ndarray = None,
                    iters: int = None,
@@ -93,7 +93,7 @@ def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float,
                    init_weights: Callable[[int], np.ndarray] = None,
                    random_state: np.random.Generator = None,
                    perceptron_type: str = None
-                ) -> tuple[Perceptron, list[float], np.ndarray]:
+                ) -> tuple[Perceptron, list[float], list[float], np.ndarray]:
     
     if not (((train_df is None and out_col is None) and (x is not None and y is not None)) or \
             ((train_df is not None and out_col is not None) and (x is None and y is None))):
@@ -108,6 +108,8 @@ def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float,
     if train_df is not None:
         x, y = sample2points(train_df, out_col)
 
+    x_test, y_test = sample2points(test_df, out_col)
+
     activation_func = np.vectorize(activation_func_single)
     prediction_func = lambda x, w: __predict__(x, w, activation_func)
 
@@ -118,9 +120,12 @@ def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float,
         calculate_error = mse
 
     x = __add_bias__(x)
+    x_test = __add_bias__(x_test)
 
     p = x.shape[0]
     n = x.shape[1]
+
+    p_test = x_test.shape[0]
 
     i = 0
     error = None
@@ -137,6 +142,7 @@ def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float,
     w_min = None
 
     error_per_iter = []
+    test_error_per_iter = []
 
     while (error is None or error > 0) and (iters is None or i < iters):
 
@@ -154,20 +160,25 @@ def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float,
         O = prediction_func(x, w)
         error = calculate_error(y, O, p)
         error_per_iter.append(error)
+
+        O_test = prediction_func(x_test, w)
+        test_error = calculate_error(y_test, O_test, p_test)
+        test_error_per_iter.append(test_error)
+
         if min_error is None or error < min_error:
             min_error = error
             w_min = w
         i += 1
 
-    return (Perceptron(w_min, activation_func_single, perceptron_type), error_per_iter, init_w)
+    return (Perceptron(w_min, activation_func_single, perceptron_type), error_per_iter, test_error_per_iter, init_w)
 
 
-def build_step_perceptron(train_df: pd.DataFrame, out_col: str, eta: float,
+def build_step_perceptron(train_df: pd.DataFrame, test_df : pd.DataFrame, out_col: str, eta: float,
                           x: np.ndarray = None, y: np.ndarray = None,
                           iters: int = None,
                           calculate_error: Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None,
                           init_weights: Callable[[int], np.ndarray] = None,
                           random_state: np.random.Generator = None
-                          ) -> tuple[Perceptron, list[float], np.ndarray]:
-    return build_perceptron(train_df, out_col, eta, step_activation, x, y, 
+                          ) -> tuple[Perceptron, list[float], list[float], np.ndarray]:
+    return build_perceptron(train_df, test_df, out_col, eta, step_activation, x, y, 
                             iters, calculate_error, init_weights, random_state)

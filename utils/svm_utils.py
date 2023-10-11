@@ -22,14 +22,17 @@ def predict_and_plot(image_path: str, output_filename: str, svm: SVC):
 
     plot_predictions(predictions, sample_size, output_filename)
 
+
 def l(t: Union[np.ndarray, float]):
     if t >= 1:
         return 0
     return 1 - t
 
+
 def calculate_cost(x: np.ndarray, y: np.ndarray, w: np.ndarray, b: float, c: float) -> float:
     t = np.dot(y, (np.dot(x, w) + b))
     return 0.5 * np.dot(w, w) + c * np.sum(l(t))
+
 
 def compute_gradient(x: np.ndarray, y: np.ndarray, w: np.ndarray, b: float, c: float) -> Tuple[np.ndarray, float]:
     t = np.dot(y, (np.dot(x, w) + b))

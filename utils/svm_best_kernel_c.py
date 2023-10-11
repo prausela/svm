@@ -10,7 +10,8 @@ from sklearn.svm import SVC
 import matplotlib.pyplot as plt
 
 
-def generate_matrix_csv(cow_df: pd.DataFrame, grass_df: pd.DataFrame, sky_df: pd.DataFrame, output_dir: str, iters: int):
+def generate_matrix_csv(cow_df: pd.DataFrame, grass_df: pd.DataFrame, sky_df: pd.DataFrame, output_dir: str,
+                        iters: int):
     df = pd.concat([cow_df, grass_df, sky_df], ignore_index=True)
 
     for i in range(iters):

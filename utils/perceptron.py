@@ -89,7 +89,7 @@ def build_perceptron(train_df: pd.DataFrame, out_col : str, eta : float,
                    init_weights: Callable[[int], np.ndarray] = None,
                    random_state: np.random.Generator = None,
                    perceptron_type: str = None
-                ) -> tuple[Perceptron, list[float]]:
+                ) -> tuple[Perceptron, list[float], np.ndarray]:
     
     if not (((train_df is None and out_col is None) and (x is not None and y is not None)) or \
             ((train_df is not None and out_col is not None) and (x is None and y is None))):
@@ -164,6 +164,6 @@ def build_step_perceptron(train_df: pd.DataFrame, out_col: str, eta: float,
                           calculate_error: Callable[[np.ndarray, np.ndarray, np.ndarray, int], float] = None,
                           init_weights: Callable[[int], np.ndarray] = None,
                           random_state: np.random.Generator = None
-                          ) -> tuple[Perceptron, list[float]]:
+                          ) -> tuple[Perceptron, list[float], np.ndarray]:
     return build_perceptron(train_df, out_col, eta, step_activation, x, y, 
                             iters, calculate_error, init_weights, random_state)

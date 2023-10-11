@@ -8,4 +8,4 @@ def plot_predictions(predictions: np.ndarray, sample_size: dict, output_filename
     predictions_color_matrix = predictions_color.reshape(sample_size['height'], sample_size['width'], 3)
     fig, ax = plt.subplots()
     ax.imshow(predictions_color_matrix)
-    plt.savefig('output/' + output_filename)
+    plt.savefig('output/' + output_filename, bbox_inches='tight', dpi=1200)
